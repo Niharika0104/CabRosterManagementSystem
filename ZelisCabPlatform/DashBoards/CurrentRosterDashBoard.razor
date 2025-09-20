@@ -1,0 +1,100 @@
+﻿
+@using System.ComponentModel.DataAnnotations
+@inject LoginService loginservice
+@inject CabService cabservice
+@using Blazored.Toast.Configuration
+@using ZelisCabPlatform.HelperMethods
+
+@inject Blazored.Toast.Services.IToastService ToastService
+@inject NavigationManager navigationManager
+
+<div>
+ 
+
+
+   
+
+    <div class="mt-3">
+        <table class="table table-bordered table-hover ">
+            <thead class="table bg-warning">
+                <tr class="d-table-row">
+                    <th>Day</th>
+                    <th>PickUp Location</th>
+                    <th>Drop Location</th>
+                  
+                   @*  <th>PickUp Time</th> *@
+                    <th>Vehicle Number</th>
+                    <th>Driver Name</th>
+                    <th>Driver Phone Number</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < weeklyroster?.Count; i++)
+                {
+                    BookingRecord record = weeklyroster[i];
+
+                    <tr class="d-table-row">
+                        <td class="d-table-cell">@record.BookingDate.ToString("yyyy-MM-dd")</td>
+                        <td class="d-table-cell">
+                            @record.PickUpLocation
+                        </td>
+                        <td class="d-table-cell">
+                            @record.DropLocation
+                        </td>
+                        
+                       @*  <td class="d-table-cell">
+                            @record.PickUpTime.ToString(@"HH:mm tt")
+                        </td> *@
+                        <td class="d-table-cell">
+                            @record.VehicleNumber
+                        </td>
+                        <td class="d-table-cell">
+                            @record.Name
+                        </td>
+                        <td class="d-table-cell">
+                            @record.PhoneNumber
+                        </td>
+                        <td class="d-table-cell">
+                            @if (record.BookingDate.Date <= DateTime.Now.Date)
+                            {
+
+                                <p class="rounded-pill bg-success p-2 text-center">Completed</p>
+                            }
+
+                           else if(record.BookingDate.Date > DateTime.Now.Date) {
+                                <p class="rounded-pill bg-warning p-2 text-center">Up Coming</p>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ... (The rest of your existing code) ... -->
+
+</div>
+@code {
+    DateTime startdate { get; set; } = DateTime.Now.Date;
+    DateTime enddate { get; set; }
+
+    RosterInfo rostermodell = new RosterInfo();
+
+
+    List<string> daysOfWeek = new List<string>
+{
+    "Mon", "Tue", "Wed", "Thu", "Fri","Sat","Sun"
+};
+
+    List<BookingRecord> weeklyroster;
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        weeklyroster = await cabservice.getcurrentroster(loginservice.employee.EmployeeId);
+    }
+   
+   
+        }

@@ -1,0 +1,79 @@
+﻿@inject ManagerService managerservice
+@inject LoginService loginservice
+@inject CabService cabservice
+@inject NavigationManager navigationmanager
+<table class="table table-hover table-bordered">
+    <thead class="table bg-warning">
+        <tr class="d-table-row">
+            <td class="d-table-cell">S.No</td>
+            <td class="d-table-cell">StartDate</td>
+            <td class="d-table-cell">EndDate</td>
+            <td class="d-table-cell">AppliedDate</td>
+            <td class="d-table-cell">Status</td>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @for (int i = 0; i < list?.Count; i++)
+        {
+            RosterRequest request = list[i];
+            <tr class="d-table-row">
+                @if (request.EndDate.Date < DateTime.Now.Date && request.Status == 2)
+                {
+                    <td class="d-table-cell">@(i + 1)</td>
+                    <td class="d-table-cell">@(request.StartDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">@(request.EndDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">@(request.AppliedDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">
+                        <p class="rounded-pill p-2 bg-success text-center">Completed</p>
+                    </td>
+                }
+                else if (request.StartDate.Date <= DateTime.Now.Date && request.EndDate.Date >= DateTime.Now.Date && request.Status == 2)
+                {
+
+                    <td class="d-table-cell">@(i + 1)</td>
+                    <td class="d-table-cell">@(request.StartDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">@(request.EndDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">@(request.AppliedDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">
+                        <p class="rounded-pill bg-info text-center p-2">On Going</p>
+                    </td>
+                }
+                else if (request.Status == 2 && request.StartDate.Date > DateTime.Now.Date)
+                {
+
+                    <td class="d-table-cell">@(i + 1)</td>
+                    <td class="d-table-cell">@(request.StartDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">@(request.EndDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">@(request.AppliedDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">
+                        <p class="rounded-pill bg-info text-center p-2" >Up Coming</p>
+                    </td>
+                }
+                else if (request.Status == 1 && request.StartDate.Date >= DateTime.Now.Date)
+                {
+
+                    <td class="d-table-cell">@(i + 1)</td>
+                    <td class="d-table-cell">@(request.StartDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">@(request.EndDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">@(request.AppliedDate.Date.ToString("MM-dd-yyyy"))</td>
+                    <td class="d-table-cell">
+                        <p class="rounded-pill bg-warning p-2 text-center" >Pending For Approval</p>
+                    </td>
+                }
+            </tr>
+        }
+
+        
+    </tbody>
+</table>
+@code {
+    List<RosterRequest> list;
+    int type;
+    protected async override Task OnInitializedAsync()
+    {
+        list = await cabservice.GetApprovedRosters(loginservice?.employee?.EmployeeId);
+    }
+
+}

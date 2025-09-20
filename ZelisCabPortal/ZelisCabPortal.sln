@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZelisCabPortal", "ZelisCabPortal.csproj", "{989B6E82-1F85-40DD-881C-2F01E439492A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZelisCabPortalBusinessLayer", "..\ZelisCabPortalBusinessLayer\ZelisCabPortalBusinessLayer.csproj", "{A1B4B82D-FD84-4FBF-965C-3A945C8A9D58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZelisCabPortalDataLayer", "..\ZelisCabPortalDataLayer\ZelisCabPortalDataLayer.csproj", "{6F060C9B-4F33-485D-B28D-5DF51D430AC1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZelisCabPortalCoreLayer", "..\ZelisCabPortalCoreLayer\ZelisCabPortalCoreLayer.csproj", "{DE9F835C-A43F-459A-9929-0BBCE3404FC3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZelisCabPlatform", "..\ZelisCabPlatform\ZelisCabPlatform.csproj", "{C245166A-728D-4145-A395-433AF679AAC5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{989B6E82-1F85-40DD-881C-2F01E439492A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{989B6E82-1F85-40DD-881C-2F01E439492A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{989B6E82-1F85-40DD-881C-2F01E439492A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{989B6E82-1F85-40DD-881C-2F01E439492A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B4B82D-FD84-4FBF-965C-3A945C8A9D58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B4B82D-FD84-4FBF-965C-3A945C8A9D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B4B82D-FD84-4FBF-965C-3A945C8A9D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B4B82D-FD84-4FBF-965C-3A945C8A9D58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F060C9B-4F33-485D-B28D-5DF51D430AC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F060C9B-4F33-485D-B28D-5DF51D430AC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F060C9B-4F33-485D-B28D-5DF51D430AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F060C9B-4F33-485D-B28D-5DF51D430AC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE9F835C-A43F-459A-9929-0BBCE3404FC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE9F835C-A43F-459A-9929-0BBCE3404FC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE9F835C-A43F-459A-9929-0BBCE3404FC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE9F835C-A43F-459A-9929-0BBCE3404FC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C245166A-728D-4145-A395-433AF679AAC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C245166A-728D-4145-A395-433AF679AAC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C245166A-728D-4145-A395-433AF679AAC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C245166A-728D-4145-A395-433AF679AAC5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {274EC956-2FDF-42C2-B20D-7F787ACC2547}
+	EndGlobalSection
+EndGlobal

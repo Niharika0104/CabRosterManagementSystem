@@ -1,0 +1,91 @@
+﻿@page "/"
+@layout EmptyLayout
+@using ZelisCabPlatform.Models
+@inject LoginService loginservice
+@inject NavigationManager NavigationManager
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage;
+@using Blazored.Toast.Configuration
+@inject Blazored.Toast.Services.IToastService ToastService
+
+<div class="container-fluid ps-md-0">
+    <div class="row g-0">
+        <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+        <div class="col-md-8 col-lg-6">
+            <div class="login d-flex align-items-center py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-9 col-lg-8 mx-auto ">
+                            <h3 class="login-heading mb-4 ">Welcome back!</h3>
+
+                           
+                            <EditForm Model="login" OnValidSubmit="HandleSubmitRequest">
+                               <DataAnnotationsValidator/>
+                                <div class="form-floating mb-3">
+                                    <InputText class="form-control rounded-pill border-0 shadow-sm" id="floatingInput" placeholder="name@example.com" @bind-Value="login.Email"/>
+                                    <ValidationMessage For="@(()=>login.Email)"/>
+                                    <label for="floatingInput">Email address</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <InputText type="password" class="form-control  rounded-pill border-0 shadow-sm" id="floatingPassword" placeholder="Password" @bind-Value="login.Password" />
+                                    <ValidationMessage For="@(()=>login.Password)" />
+
+                                    <label for="floatingPassword">Password</label>
+                                </div>
+
+
+                                <div class="d-grid">
+                                    <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2 rounded-pill border-0 shadow-sm" type="submit">
+                                        @if(isloading){
+                                            <p class="spinner-border"></p>
+                                        }
+                                        else
+                                        {
+                                            <p class="p-0 m-0"> Sign In</p>
+                                        }
+                                    </button>
+                                    
+                                </div>
+
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code{
+
+    LoginRequest login = new LoginRequest();
+    bool isloading = false;
+    //[CascadingParameter]public ApplicationState Appstate{ get; set; }
+
+    protected  async Task HandleSubmitRequest()
+    {
+        isloading = true;
+        StateHasChanged();
+        isloading = false;
+        Employee emp =await loginservice.Login(login);
+
+        if (emp!=null) {
+            await sessionStorage.SetItemAsync<Employee>("employee",loginservice?.employee);
+            loginservice.employee= emp;
+            // if(Appstate!=null)Appstate.employee = loginservice.employee;
+            if (loginservice?.employee?.Role == "Admin")
+            {
+                NavigationManager.NavigateTo("/admin");
+            }
+            else
+                NavigationManager.NavigateTo("/cabservice");
+
+        }
+        else
+        {
+
+            ToastService.ShowError("Incorrect email or password", settings => { settings.Position = ToastPosition.TopRight; settings.Timeout = 10; settings.ShowProgressBar = true; });
+        }
+    }
+
+}

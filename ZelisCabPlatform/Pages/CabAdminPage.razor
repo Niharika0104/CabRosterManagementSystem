@@ -1,0 +1,45 @@
+﻿@page "/admin"
+@inject LoginService loginservice
+<Cards @ref="cards" UpdateState="UpdateComponent"></Cards>
+@if (cards?.CurrentCard == 6)
+{
+    <CabDetailsDashBoard />
+
+}
+@if (cards?.CurrentCard == 7)
+{
+    <DriverDetailsDashBoard />
+
+}
+@if (cards?.CurrentCard == 8)
+{
+    <PendingBookingsDashBoard />
+
+}
+
+
+
+@code {
+    //[CascadingParameter] ApplicationState Appstate { get; set; }
+
+    private PopUp popup;
+    private Cards cards;
+    private string status;
+    private string? message;
+    private string btnclass;
+    private bool confimationNeeded;
+    private bool IsButtonDisabled;
+    private string tooltip;
+    private string classname;
+    Dictionary<int, string> componentsDictionary = new Dictionary<int, string>();
+
+    private async Task UpdateComponent()
+    {
+        StateHasChanged();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await loginservice?.SetEmployee();
+        UpdateComponent();
+    }
+}

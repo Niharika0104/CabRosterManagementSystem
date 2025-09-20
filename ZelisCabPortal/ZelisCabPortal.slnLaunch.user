@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Name": "ZelisCabPortal.csproj",
+        "Action": "Start"
+      },
+      {
+        "Name": "..\\ZelisCabPlatform\\ZelisCabPlatform.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

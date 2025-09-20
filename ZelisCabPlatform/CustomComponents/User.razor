@@ -1,0 +1,33 @@
+﻿
+
+
+
+   <!-- UserProfileDropdown.razor -->
+
+@code {
+    // Add necessary properties and methods for user profile information
+    string userName = "John Doe"; // Replace with actual user name
+    string userEmail = "john@example.com"; // Replace with actual user email
+
+    void Logout()
+    {
+        // Add logout logic here
+    }
+}
+
+<div class="user-profile-dropdown">
+    <div class="user-info">
+        <p class="user-name">@userName</p>
+        <p class="user-email">@userEmail</p>
+    </div>
+    <button class="logout-button" type="button" @onclick="Logout">Logout</button>
+</div>
+
+<style>
+    /* Add your styling for the dropdown here */
+    .user-profile-dropdown {
+        /* Your styles go here */
+    }
+
+    /* Add styles for user info and logout button */
+</style>

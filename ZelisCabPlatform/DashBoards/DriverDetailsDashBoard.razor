@@ -1,0 +1,41 @@
+﻿@inject ManagerService managerservice
+@inject LoginService loginservice
+@inject CabService cabservice
+<table class="table table-hover table-bordered">
+    <thead class="table bg-warning">
+        <tr class="d-table-row">
+            <td class="d-table-cell">S.No</td>
+           
+            <td class="d-table-cell"> Name</td>
+            <td class="d-table-cell"> Phone Number</td>
+            <td class="d-table-cell">Email</td>
+
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < list?.Count; i++)
+        {
+
+            DriverData request = list[i];
+            <tr class="d-table-row">
+                <td class="d-table-cell">@(i + 1)</td>
+                <td class="d-table-cell">@(request.Name)</td>
+                <td class="d-table-cell">@(request.PhoneNumber)</td>
+                <td class="d-table-cell">@(request.Email)</td>
+              
+                
+
+
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+    List<DriverData> list;
+    int type;
+    protected async override Task OnInitializedAsync()
+    {
+        list = await cabservice.getDriversData();
+    }
+
+}

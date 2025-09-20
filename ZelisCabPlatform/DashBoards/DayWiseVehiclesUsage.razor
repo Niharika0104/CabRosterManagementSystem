@@ -1,0 +1,45 @@
+﻿@inject ManagerService managerservice
+@inject LoginService loginservice
+@inject CabService cabservice
+<table class="table table-hover table-bordered">
+    <thead class="table bg-warning">
+        <tr class="d-table-row">
+            <td class="d-table-cell">S.No</td>
+            <td class="d-table-cell">Employee Name</td>
+            <td class="d-table-cell">Employee Phone No:</td>
+            <td class="d-table-cell">PickUp Location</td>
+            <td class="d-table-cell">Drop Location</td>
+            <td class="d-table-cell">Driver Name</td>
+            <td class="d-table-cell">Driver Phone No:</td>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @for (int i = 0; i < list?.Count; i++)
+        {
+
+            CurrentDayBooking request = list[i];
+            <tr class="d-table-row">
+                <td class="d-table-cell">@(i + 1)</td>
+                <td class="d-table-cell">@(request.EmployeeName)</td>
+                <td class="d-table-cell">@(request.EmployeePhoneNumber)</td>
+                <td class="d-table-cell">@(request.PickUpLocation)</td>
+                <td class="d-table-cell">@(request.DropLocation)</td>
+                <td class="d-table-cell">@(request.DriverName)</td>
+                <td class="d-table-cell">@(request.DriverPhoneNumber)</td>
+                
+
+             
+
+
+            </tr>
+        }
+
+    </tbody>
+</table>
+@code {
+    [Parameter]public List<CurrentDayBooking> list{ get; set; }
+
+
+}

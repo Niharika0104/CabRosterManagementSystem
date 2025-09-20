@@ -1,0 +1,77 @@
+﻿@inject ManagerService managerservice
+@inject LoginService loginservice
+
+<table class="table table-hover">
+    <thead class="bg-warning">
+        <tr class="d-table-row">
+            <td class="d-table-cell">S.No</td>
+            <td class="d-table-cell">Email</td>
+            <td class="d-table-cell">Name</td>
+            <td class="d-table-cell">Date</td>
+            <td class="d-table-cell"></td>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < list?.Count; i++)
+        {
+            int id = list[i].EmployeeId;
+            Employee employee = list[i];
+            <tr class="d-table-row">
+                <td class="d-table-cell">@(i + 1)</td>
+                <td class="d-table-cell">@(employee.Email)</td>
+                <td class="d-table-cell">@(employee.FirstName + " " + employee.LastName)</td>
+                <td class="d-table-cell">@(employee.PhoneNumber)</td>
+                <td class="d-table-cell">
+                    @if (list[i].CabService == 1)
+                    {
+                        <button class="btn btn-warning rounded-pill"
+                                @onclick="()=>{ProcessRequest(id,2);}">
+                            Approve
+                        </button>
+                    }
+                    @if (list[i].CabService == 2)
+                    {
+                        <button class="btn btn-danger rounded-pill"
+                                @onclick="()=>{ProcessRequest(id,3);}">
+                            Terminate
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+        List<Employee> list;
+        int type;
+    protected async override Task OnInitializedAsync()
+    {
+        await UpdateEmployeesList();
+    }
+    private async void PendingRequest()
+    {
+        int id = loginservice.employee.EmployeeId;
+        list = await managerservice.PendingRequests(id);
+        // if (val)
+        // {
+        //     //await loginservice.UpdateEmployee(id);
+        //     await UpdateEmployeesList();
+        //     StateHasChanged();
+        // }
+    }
+    private async void ProcessRequest(int id, int type)
+    {
+        bool val = await managerservice.ProcessRequest(new ProcessDTO() { EmployeeId = id, Status = type });
+        if (val)
+        {
+            //await loginservice.UpdateEmployee(id);
+            await UpdateEmployeesList();
+            StateHasChanged();
+        }
+    }
+    private async Task UpdateEmployeesList()
+    {
+         int id = loginservice.employee.EmployeeId;
+    list = await managerservice.PendingRequests(id);
+    }
+}

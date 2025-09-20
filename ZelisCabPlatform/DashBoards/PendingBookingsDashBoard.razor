@@ -1,0 +1,106 @@
+﻿@inject CabService cabservice
+@inject LoginService loginservice
+
+
+    <BookingProcessingPopUp @ref="popup" ButtonName="@btnname">
+   <Component>
+     @if(btnname.Equals("Approve"))
+     {
+            <ApproveRosterComponent RosterData="currentroster" UpdateComponentState="UpdateState" />
+     }
+        @if (btnname.Equals("Reject"))
+        {
+            <RejectRosterComponent RosterData="currentroster" UpdateComponentState="UpdateState" />
+        }
+    </Component>      
+ 
+    </BookingProcessingPopUp>
+
+
+<table class="table table-hover table-bordered">
+    <thead class="table bg-warning">
+        <tr class="d-table-row">
+            <td class="d-table-cell">S.No</td>
+            <td class="d-table-cell">Start Date</td>
+            <td class="d-table-cell">End Date</td>
+            <td class="d-table-cell">Applied Date</td>
+            <td class="d-table-cell">Employee Name</td>
+           
+            <td class="d-table-cell">Actions</td>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < list?.Count; i++)
+        {
+           
+            RosterRequest roster = list[i];
+            currentroster = roster;
+            <tr class="d-table-row">
+                <td class="d-table-cell">@(i + 1)</td>
+                <td class="d-table-cell">@(list[i]?.StartDate)</td>
+                <td class="d-table-cell">@(list[i]?.EndDate)</td>
+                <td class="d-table-cell">@(list[i]?.AppliedDate)</td>
+                <td class="d-table-cell">@(list[i]?.FullName)</td>
+                <td class="d-table-cell">
+                   
+                        <button class="btn btn-warning rounded-pill"
+                            @onclick="()=>{ProcessRequest(roster.Id,2);}">
+                            Approve
+                        </button>
+                  
+                  
+                   
+                        <button class="btn btn-danger rounded-pill"
+                            @onclick="()=>{ProcessRequest(roster.Id,3);}">
+                            Terminate
+                        </button>
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+    RosterRequest currentroster;
+    List<RosterRequest> list;
+    string btnname;
+    private BookingProcessingPopUp popup = new BookingProcessingPopUp(); // Initialize popup here
+
+    private int Action { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await UpdatePendingRosterList();
+    }
+    private  async Task UpdateState()
+    {
+        popup.CloseModal();
+        await UpdatePendingRosterList();
+        //StateHasChanged();
+    }
+    private  async Task ProcessRequest(int id, int type)
+    {
+        await popup.ShowModal();
+        StateHasChanged();
+        if (type == 2)
+        {
+            Action = 1;
+            btnname = "Approve";
+            StateHasChanged();
+        }
+        else if(type==3)
+        {
+            Action = -1;
+            btnname = "Reject";
+
+            StateHasChanged();
+
+        }
+    }
+    private async Task UpdatePendingRosterList()
+    {
+        int id = loginservice.employee.EmployeeId;
+        list = await cabservice.getpendingrosters();
+        StateHasChanged();
+    }
+}

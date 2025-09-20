@@ -1,0 +1,53 @@
+﻿@inject ManagerService managerservice
+@inject LoginService loginservice
+@inject CabService cabservice
+<table class="table table-hover table-bordered">
+    <thead class="table bg-warning">
+        <tr class="d-table-row">
+            <td class="d-table-cell">S.No</td>
+            <td class="d-table-cell">Vehicle Number</td>
+            <td class="d-table-cell">Owner Name</td>
+            <td class="d-table-cell">Total Seats</td>
+            <td class="d-table-cell">Available Seats</td>
+            <td class="d-table-cell">Status</td>
+
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < list?.Count; i++)
+        {
+
+            CabData request = list[i];
+            <tr class="d-table-row">
+                <td class="d-table-cell">@(i + 1)</td>
+                <td class="d-table-cell">@(request.VehicleNumber)</td>
+                <td class="d-table-cell">@(request.Name)</td>
+                <td class="d-table-cell">@(request.TotalSeats)</td>
+                <td class="d-table-cell">@(request.AvailableSeats)</td>
+                <td class="d-table-cell">
+                    @if (request.IsAvailable)
+                    {
+                        <p class="rounded-pill bg-success p-2 text-center">Available</p>
+                    }
+                    else
+                    {
+                        <p class="rounded-pill border-danger">Not Available</p>
+
+                    }
+                </td>
+
+
+
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+    List<CabData> list;
+    int type;
+    protected async override Task OnInitializedAsync()
+    {
+        list = await cabservice.getCabsData();
+    }
+
+}

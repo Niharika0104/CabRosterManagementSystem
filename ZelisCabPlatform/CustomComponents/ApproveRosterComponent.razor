@@ -1,0 +1,81 @@
+﻿@inject CabService cabservice
+
+
+
+<EditForm Model="@selectedcab" OnValidSubmit="@HandleSubmit">
+    <div class="card  mx-auto">
+        <div class="card-body">
+            <div class="form-group">
+                <label for="vehicleNumber" class="form-label fw-bold">Select Vehicle Number:</label>
+                <select class="form-control form-select" id="vehicleNumber" @bind="selectedcab.VehicleNumber">
+                    <option value="select">select</option>
+
+                    @for (int i=0;i< availableVehicles?.Count;i++)
+                    {
+                        CabData vehicle = availableVehicles[i];
+                        <option value="@vehicle.VehicleNumber">@vehicle.VehicleNumber</option>
+                    }
+                </select>
+            </div>
+
+            @if (selectedcab.VehicleNumber != null)
+            {
+
+
+                var selectedVehicle = vehicleDetailsDictionary.GetValueOrDefault(selectedcab.VehicleNumber);
+                selectedcab = selectedVehicle;
+                @if (selectedVehicle != null)
+                {
+                    if (selectedVehicle != null)
+                    {
+                        isdisable = false;
+
+                        <div class="card mt-2">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">Driver Information</h5>
+                                <p class="card-text"><span class="fw-bold">Driver Name:</span> @selectedVehicle.Name</p>
+                                <p class="card-text"><span class="fw-bold">Total Seats:</span> @selectedVehicle.TotalSeats</p>
+                                <p class="card-text"><span class="fw-bold">Available Seats:</span> @selectedVehicle.AvailableSeats</p>
+                                <p class="card-text"><span class="fw-bold">Phone Number:</span> @selectedVehicle.PhoneNumber</p>
+                            </div>
+                        </div>
+                    }
+                }
+
+            }
+
+            <div class="mt-3 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary " disabled="@isdisable">Save</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public RosterRequest RosterData { get; set; }
+    CabData selectedcab = new CabData();
+    private List<CabData> availableVehicles;
+    private Dictionary<string, CabData> vehicleDetailsDictionary;
+    [Parameter] public EventCallback UpdateComponentState { get; set; }
+
+    private bool isdisable = true;
+    private async void HandleSubmit()
+    {
+        Boolean res = await cabservice.Approve(RosterData, selectedcab);
+        if (res)
+        {
+          await  UpdateComponentState.InvokeAsync();
+        }
+    }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<CabData> allvehicles = await cabservice.getCabsData();
+        availableVehicles = allvehicles.Where(c => c.IsAvailable == true).ToList();
+        vehicleDetailsDictionary = availableVehicles.ToDictionary(v => v.VehicleNumber);
+
+    }
+}
+

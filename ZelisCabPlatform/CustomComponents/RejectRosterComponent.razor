@@ -1,0 +1,47 @@
+﻿@inject CabService cabservice
+
+
+
+    <div class="card  mx-auto">
+        <div class="card-body">
+            <label class="form-label fs-3">Comment</label>
+            <textarea class="form-control" @onchange="CommentTextArea" rows="3"></textarea>
+            <div class="mt-3 d-flex justify-content-center">
+                <button @onclick="HandleSubmit" class="btn btn-primary" disabled="@isdisable">Reject</button>
+            </div>
+        </div>
+    </div>
+
+
+@code {
+    [Parameter] public RosterRequest RosterData { get; set; }
+    [Parameter] public EventCallback UpdateComponentState { get; set; }
+    CabData selectedcab = new CabData();
+    private List<CabData> availableVehicles;
+    private Dictionary<string, CabData> vehicleDetailsDictionary;
+
+    private bool isdisable = true;
+    private async Task HandleSubmit()
+    {
+        Boolean res = await cabservice.Reject(RosterData);
+        if (res)
+        {
+            await UpdateComponentState.InvokeAsync();
+        }
+    }
+    private void CommentTextArea(ChangeEventArgs e)
+    {
+        RosterData.Comment = e.Value?.ToString() ?? string.Empty;
+        isdisable = string.IsNullOrWhiteSpace(RosterData.Comment);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (String.IsNullOrEmpty(RosterData.Comment))
+        {
+            isdisable = true;
+        }
+
+    }
+}
+

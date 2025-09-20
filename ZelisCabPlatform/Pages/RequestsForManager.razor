@@ -1,0 +1,20 @@
+﻿@page "/requests"
+<CardsManager @ref="cards" UpdateState="UpdateComponent"></CardsManager>
+@if (cards?.CurrentCard == 3)
+{
+    <ApproveServiceDashboard />
+
+}
+@if (cards?.CurrentCard == 4)
+{
+    <PendingRequestDashBoard />
+
+}
+@code {
+    private CardsManager cards;
+    private async Task UpdateComponent()
+    {
+        StateHasChanged();
+    }
+
+}

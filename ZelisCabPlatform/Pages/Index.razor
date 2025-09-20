@@ -1,0 +1,26 @@
+﻿@page "/index"
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage;
+@inject NavigationManager NavigationManager
+@inject LoginService loginservice
+<PageTitle>Index</PageTitle>
+@if (loginservice?.employee?.CabService == 4)
+{
+    <button class="btn btn-primary btn-lg" @onclick="(()=>{popup.ShowModal();})">Avail cab service</button>
+
+    @code {
+    public Employee employee;
+    private PopUp popup;
+    [CascadingParameter] public ApplicationState Appstate { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        employee = await sessionStorage.GetItemAsync<Employee>("employee");
+
+        if (employee == null) NavigationManager.NavigateTo("/");
+        //Appstate.employee = employee;
+
+    }
+}
+}
+

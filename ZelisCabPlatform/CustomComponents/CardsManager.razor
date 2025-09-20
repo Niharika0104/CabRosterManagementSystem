@@ -1,0 +1,33 @@
+﻿@inject LoginService loginservice
+@inject CabService cabservice
+<div class="d-flex gap-4 flex-wrap p-2">
+
+  
+    @if (loginservice?.employee?.Role == "Manager")
+    {
+        <CardComponent Title="All Requests" CardId="3" Count="4" OnCardClick="currentcard" ImgUrl="https://cdn2.iconfinder.com/data/icons/flat-productivity-at-work/256/To-Do_List-1024.png" BackgroundColor="#3385ff" />
+        <CardComponent Title="Pending Requests" CardId="4" Count="4" OnCardClick="currentcard" ImgUrl="https://th.bing.com/th/id/OIP.XDNxjkYXuzHz6VMxKUq42gHaHw?rs=1&pid=ImgDetMain" BackgroundColor="yellow" />
+    }
+   
+</div>
+
+@code {
+    public int CurrentCard { get; set; }
+    public int approved { get; set; }
+    public int rejected { get; set; }
+    public int drivers { get; set; }
+    public int cabs { get; set; }
+
+    [Parameter] public EventCallback UpdateState { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+       
+    }
+    public async Task currentcard(int id)
+    {
+        CurrentCard = id;
+
+        await UpdateState.InvokeAsync();
+    }
+
+}

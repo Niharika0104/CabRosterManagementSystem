@@ -1,0 +1,116 @@
+﻿@page "/cabservice"
+@inject LoginService loginservice
+@inject CabService cabservice
+
+<div class="d-flex justify-content-end">
+    <div>
+        @if (showavailbtn)
+        {
+        <button  @onclick="@(()=>{popup?.ShowModal();})" class="@availbuttonclass" >@status</button>
+        }
+        @if(requestcount==0){
+        <NavLink class="@rosterbuttonclass"  href="roster">Create Roster</NavLink>
+       
+        }
+    </div>
+</div>
+
+<Cards @ref="cards" UpdateState="UpdateComponent"></Cards>
+
+@if (cards?.CurrentCard == 1)
+{
+    <ApprovedRosterDashBoard />
+
+}
+@if (cards?.CurrentCard == 2)
+{
+    <RejectedRosterDashBoard />
+
+}
+
+@if (cards?.CurrentCard == 5)
+{
+    <CurrentRosterDashBoard />
+
+}
+<PopUp @ref="popup" ButtonName="Yes" CloseButtonName="No" ConfirmationMessage="@message" ModalName="create" ConfirmationNeeded="@confimationNeeded" OnCancel="AvailService" IscancelNeeded="@true" />
+
+@code {
+    //[CascadingParameter] ApplicationState Appstate { get; set; }
+    private PopUp popup;
+    private Cards cards;
+    private string status;
+    private string? message;
+    private string btnclass;
+    private bool confimationNeeded;
+    private bool showavailbtn=false;
+    private string rosterbuttonclass="btn btn-primary d-block";
+    private string availbuttonclass = "btn btn-primary d-none";
+    private string tooltip;
+    private string classname;
+    DateTime nextmondaydate = DateTime.Now.AddDays(-(int)DayOfWeek.Monday - 1 + 7).Date;
+    int requestcount = 0;
+    Dictionary<int, string> componentsDictionary = new Dictionary<int, string>();
+
+    private async Task UpdateComponent()
+    {
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        componentsDictionary.Add(1, "Component A");
+        componentsDictionary.Add(2, "Component B");
+        componentsDictionary.Add(3, "ApproveServiceDashboard");
+
+        await loginservice?.SetEmployee();
+         requestcount=await cabservice.GetRequestCount(nextmondaydate,loginservice.employee.EmployeeId);
+        if (loginservice?.employee?.CabService == 4 || loginservice?.employee?.CabService == 3)
+        {
+            message = "You have not availed for cab service.Do you wish to avail it?";
+            confimationNeeded = true;
+            status = "Avail Cab Service";
+            btnclass = "btn btn-primary";
+
+            rosterbuttonclass = "btn btn-primary d-none";
+            availbuttonclass = "btn btn-primary d-block";
+            showavailbtn = true;
+
+        }
+        else if (loginservice?.employee?.CabService == 1)
+        {
+            message = "Your request is pending with your manager";
+            confimationNeeded = false;
+            status = "Pending";
+            btnclass = "btn btn-warning";
+
+            tooltip = "Please avail cab facility first to create a roster";
+            rosterbuttonclass = "btn btn-primary d-none";
+            availbuttonclass = "btn btn-primary d-block";
+
+            showavailbtn = true;
+        }
+    }
+    public async Task AvailService(bool value)
+    {
+        if (value)
+        {
+            if (loginservice?.employee?.CabService == 4 || loginservice?.employee?.CabService == 3)
+            {
+                await cabservice.RaiseRequest(loginservice.employee.EmployeeId, 4);
+                loginservice.employee.CabService = 1;
+                await loginservice.UpdateEmployee(loginservice.employee.EmployeeId);
+                await OnInitializedAsync();
+
+            }
+            else if (loginservice?.employee?.CabService == 5)
+            {
+                await cabservice.RaiseRequest(loginservice.employee.EmployeeId, 2);
+                loginservice.employee.CabService = 1;
+
+               await loginservice.UpdateEmployee(loginservice.employee.EmployeeId);
+                await OnInitializedAsync();
+            }
+        }
+    }
+}

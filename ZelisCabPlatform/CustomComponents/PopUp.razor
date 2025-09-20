@@ -1,0 +1,70 @@
+﻿<style>
+    .fade {
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+    }
+</style>
+@if (IsModalVisible)
+{
+    <div class="modal  fade show d-block zIndex" id="exampleModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                @if (IsCancelNeeded)
+                {
+                    <div class="d-flex justify-content-end p-2">
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="()=>CloseModal()"></button>
+                    
+                </div>
+                }
+                <div class="d-flex justify-content-center mb-2">
+                  
+                    @ConfirmationMessage
+                </div>
+                @if (ConfirmationNeeded)
+                {
+                    <div class="d-flex justify-content-center mb-2">
+                        <button type="button" class="btn btn-secondary p-2" @onclick="()=>CancelConfirmed(false)">@CloseButtonName</button>
+                        <button type="button" class="btn btn-danger p-2 mx-2" @onclick="()=>CancelConfirmed(true)">@ButtonName</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+@code {
+    [Parameter] public string? ConfirmationMessage { get; set; }
+    [Parameter] public string? ButtonName { get; set; }
+    [Parameter] public string? CloseButtonName { get; set; }
+    [Parameter] public bool ConfirmationNeeded { get; set; }
+    [Parameter] public string? ModalName { get; set; }
+    [Parameter] public bool IsCancelNeeded { get; set; }
+    public bool IsModalVisible { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<bool> OnCancel { get; set; }
+
+    //public EventCallback<bool,int?> OnCancel { get; set; }
+    public void ShowModal()
+    {
+        IsModalVisible = true;
+        StateHasChanged();
+
+    }
+    public void CloseModal()
+    {
+        IsModalVisible = false;
+        StateHasChanged();
+
+    }
+    protected async Task CancelConfirmed(bool value)
+    {
+        IsModalVisible = false;
+        if (value)
+        {
+            OnCancel.InvokeAsync(value);
+        }
+
+    }
+}

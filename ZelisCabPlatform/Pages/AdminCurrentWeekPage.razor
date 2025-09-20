@@ -1,0 +1,80 @@
+﻿@page "/currentweek"
+@inject CabService cabservice
+<BookingProcessingPopUp @ref="popup"> 
+    <Component>
+        <DayWiseVehiclesUsage list="currentcell"/>
+    </Component>
+</BookingProcessingPopUp>
+<table class="table table-bordered">
+    <thead class="table bg-warning">
+        <tr>
+            <th>Vehicle Number</th>
+            @for (int day = 0; day < daysOfWeek.Count; day++)
+            {
+                <th>
+                    <div>
+                        <p>@date.AddDays(-(int)date.DayOfWeek + day + 1).Date.ToString("yyyy-MM-dd")</p>
+                        <p>@daysOfWeek[day]</p>
+                    </div>
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @for(int i=0;i<list?.Count;i++)
+        {
+            CabData cab = list[i];
+            <tr>
+                <td>@cab?.VehicleNumber</td>
+                @for (int day = 0; day < daysOfWeek.Count; day++)
+                {
+
+                    string value = date.AddDays(-(int)date.DayOfWeek + day + 1).Date.ToString("yyyy-MM-dd") + " "+cab.VehicleNumber;
+
+                    <td @onclick="@(()=>{HandleCellClick(@dataDictionary?.GetValueOrDefault(value));})" style="cursor:pointer;">@dataDictionary?.GetValueOrDefault(value)?.Count</td>
+                }
+               
+               
+                <!-- Add more columns as needed -->
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private DateTime date = DateTime.Today;
+    private BookingProcessingPopUp popup;
+    List<string> daysOfWeek = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+    private Dictionary<string, List<CurrentDayBooking>> dataDictionary;
+    List<CabData> list;
+    List<CurrentDayBooking> currentcell;
+    private void HandleCellClick(List<CurrentDayBooking>list)
+    {
+        currentcell = list;
+        popup.ShowModal();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        list = await cabservice.getCabsData();
+        DateTime currentWeekStart = date.AddDays(-(int)date.DayOfWeek + (int)DayOfWeek.Monday);
+
+
+        dataDictionary = new Dictionary<string, List<CurrentDayBooking>>();
+       
+        for(int i=0;i<list?.Count;i++){
+            for (int day = 0; day < 7; day++)
+            {
+                DateTime currentDay = currentWeekStart.AddDays(day);
+                string val = currentDay.Date.ToString("yyyy-MM-dd") + " " + list[i].VehicleNumber;
+
+            // Replace this with your actual backend call to get data for the current day
+            List<CurrentDayBooking> bookingsforday = await cabservice.GetDateWiseBookings(currentDay.Date,list[i].VehicleNumber);
+
+            // Add the data to the dictionary
+            dataDictionary.Add(val, bookingsforday);
+        }
+       }
+    }
+
+   
+}

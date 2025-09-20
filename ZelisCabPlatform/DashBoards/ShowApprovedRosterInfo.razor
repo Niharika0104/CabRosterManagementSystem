@@ -1,0 +1,55 @@
+﻿@page "/rosterinfo/{id}"
+
+@inject ManagerService managerservice
+@inject LoginService loginservice
+@inject CabService cabservice
+<table class="table table-hover table-bordered">
+    <thead class="table bg-warning">
+        <tr class="d-table-row">
+            <td class="d-table-cell">S.No</td>
+            <td class="d-table-cell">PickUp Location</td>
+        
+            <td class="d-table-cell">Drop Location</td>
+            <td class="d-table-cell">Drop Location</td>
+            <td class="d-table-cell">PickUp Time</td>
+            <td class="d-table-cell">Driver Phone No:</td>
+            <td class="d-table-cell">Vehicle No:</td>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @for (int i = 0; i < list?.Count; i++)
+        {
+
+            CabBookingRosterInfo request = list[i];
+            <tr class="d-table-row">
+                <td class="d-table-cell">@(i + 1)</td>
+            
+                <td class="d-table-cell">@(request.PickUpLocation)</td>
+                <td class="d-table-cell">@(request.DropLocation)</td>
+                <td class="d-table-cell">@(request.PickUpTime)</td>
+                <td class="d-table-cell">@(request.Name)</td>
+                <td class="d-table-cell">@(request.PhoneNumber)</td>
+                <td class="d-table-cell">@(request.VehicleNumber)</td>
+
+
+
+
+
+            </tr>
+        }
+
+    </tbody>
+</table>
+@code {
+    [Parameter] public string id { get; set; }
+    List<CabBookingRosterInfo> list;
+    protected override async Task OnInitializedAsync()
+    {
+        int val = int.Parse(id);
+        list = await cabservice.GetRosterInfoByIdWithCabDetails(val);
+    }
+
+
+}

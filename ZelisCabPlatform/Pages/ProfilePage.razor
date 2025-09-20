@@ -1,0 +1,52 @@
+﻿@page "/profile"
+@inject LoginService loginservice
+<div class="d-flex justify-content-center align-items-center w-100 h-100 p-2">
+    <div style="background-color: #99c2ff; border-radius: 2rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); border: 1rem;padding:2rem;">
+        <div class="d-flex justify-content-center py-2 ">
+            
+            <p class=" oi oi-person" style="font-size:6.5rem;"></p>
+        </div>
+        <div class="d-flex gap-2 px-2">
+            <p class="fs-5 fw-bold">Employee Id:</p>
+            <p class="fs-5">@loginservice.employee.EmployeeId</p>
+        </div>
+        <div class="d-flex gap-2 px-2">
+            <p class="fs-5 fw-bold">Email Id:</p>
+            <p class="fs-5">@loginservice.employee.Email</p>
+        </div>
+        <div class="d-flex gap-2 px-2">
+            <p class="fs-5 fw-bold">Employee Name:</p>
+            <p class="fs-5">@(loginservice.employee.FirstName+" "+loginservice.employee.LastName)</p>
+        </div> 
+        <div class="d-flex gap-2 px-2">
+            <p class="fs-5 fw-bold">Role:</p>
+            <p class="fs-5">@loginservice.employee.Role</p>
+        </div>
+        <div class="d-flex gap-2 px-2">
+            <p class="fs-5 fw-bold">Cab Service:</p>
+            <p class="fs-5">
+               @status
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string status;
+    protected override void OnInitialized()
+    {
+        if (loginservice.employee.CabService==1)
+        {
+            status = "cab service request is pending";
+        }
+        else if (loginservice.employee.CabService == 2)
+        {
+            status = "cab service has been availed";
+        }
+        else if (loginservice.employee.CabService == 4)
+        {
+            status = "cab service has not been availed";
+        }
+        base.OnInitialized();
+    }
+}

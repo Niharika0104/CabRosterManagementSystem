@@ -1,0 +1,71 @@
+﻿@inject LoginService loginservice
+@inject CabService cabservice
+
+
+<div class="top-row navbar nav navbar-dark bg-warning">
+   <div class="d-flex align-items-center justify-content-center">
+       <img src="ZelisLogoTransaparent.png" width="125" height="74" />
+    </div>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+ 
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+      
+        @if (loginservice?.employee?.Role != "Admin")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="cabservice">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Cab Service
+            </NavLink>
+        </div>
+        }
+        @if (loginservice?.employee?.Role == "Manager")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="requests">
+                    <span class="oi oi-envelope-open" aria-hidden="true"></span>Requests
+                </NavLink>
+            </div>
+        }
+        @if (loginservice?.employee?.Role == "Admin")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="admin">
+                    <span class="oi oi oi-list-rich" aria-hidden="true"></span>Cab Service
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="currentweek">
+                    <span class="oi oi-calendar" aria-hidden="true"></span>Current Week
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="employees">
+                    <span class="oi oi-people" aria-hidden="true"></span>Users
+                </NavLink>
+            </div>
+        }
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+    private PopUp popup;
+   
+   
+    
+    
+    
+}
+

@@ -1,0 +1,43 @@
+﻿@inject ManagerService managerservice
+@inject LoginService loginservice
+@inject CabService cabservice
+<table class="table table-hover table-bordered">
+    <thead class="table bg-warning">
+        <tr class="d-table-row">
+            <td class="d-table-cell">S.No</td>
+            <td class="d-table-cell">StartDate</td>
+            <td class="d-table-cell">EndDate</td>
+            <td class="d-table-cell">AppliedDate</td>
+            <td class="d-table-cell">RejectedDate</td>
+           
+            <td class="d-table-cell">Comment</td>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < list?.Count; i++)
+        {
+
+            RosterRequest request = list[i];
+            <tr class="d-table-row">
+                <td class="d-table-cell">@(i + 1)</td>
+                <td class="d-table-cell">@(request.StartDate.Date.ToString("MM-dd-yyyy"))</td>
+                <td class="d-table-cell">@(request.EndDate.Date.ToString("MM-dd-yyyy"))</td>
+                <td class="d-table-cell">@(request.AppliedDate.Date.ToString("MM-dd-yyyy"))</td>
+                <td class="d-table-cell">@(request.RejectedDate.Date.ToString("MM-dd-yyyy"))</td>
+                <td class="d-table-cell">@(request.Comment)</td>
+              
+
+
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+    List<RosterRequest> list;
+    int type;
+    protected async override Task OnInitializedAsync()
+    {
+        list = await cabservice.GetRejectedRosters(loginservice?.employee?.EmployeeId);
+    }
+
+}

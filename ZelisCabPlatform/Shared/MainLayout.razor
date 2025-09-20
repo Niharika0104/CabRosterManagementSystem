@@ -1,0 +1,102 @@
+﻿@using Blazored.Toast.Configuration
+@inherits LayoutComponentBase
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage;
+@inject NavigationManager navigationmanager
+
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+   
+
+    <PopUp @ref="popUpLogout" ButtonName="Yes" CloseButtonName="No" ConfirmationMessage="Do you want to logout?" ModalName="create" ConfirmationNeeded="@true" OnCancel="Logout" IscancelNeeded="@true" />
+    <main>
+        <nav class="navbar navbar-expand-lg navbar-light bg-lavendar position-relative shadow" style="height:5rem; width:100%">
+            <div class="container-fluid">
+              
+                    <p class="navbar-brand fs-2 text-warning fw-bold mx-auto" > Cab Portal</p>
+              
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                       
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto mx-1">
+                      
+                        <li class="nav-item ">
+                            <button @onclick="@(func)" class="border-0 bg-transparent oi fs-2 oi-person dropdown-toggle text-white">
+                                  @("          "+fullname)
+                            </button>
+
+                            <ul class="@classname" aria-labelledby="navbarDropdown" style="position:absolute;top:110%; right:0; z-index:1">
+                                <li class="list-unstyled oi oi-person text-black"><NavLink href="profile" class="mx-2 text-decoration-none fs-5  text-black" onclick="@(func)">Profile Details</NavLink></li>
+                                <li class="list-unstyled oi oi-pencil d-block text-black"><NavLink href="profile" class="mx-2 text-black fs-5 text-decoration-none">Change Password</NavLink></li>
+                                <li class="list-unstyled oi  oi-account-logout d-block text-black py-1"><p class="text-black d-inline mx-2 fs-5" onclick="@(()=>{ popUpLogout.ShowModal();})" style="cursor:pointer">Logout</p></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+
+                </div>
+            </div>
+        </nav>
+
+        <article class="content px-4">
+            <BlazoredToasts />
+            @Body
+           
+        </article>
+    </main>
+</div>
+@code{
+    public ApplicationState Appstate{ get; set; } = new ApplicationState();
+    private void handleprofile()
+    {
+        isActive = !isActive;
+        StateHasChanged();
+    }
+    private bool visible = true;
+    private string classname = "bg-light px-4 rounded-1 d-none ";
+    private void func()
+    {
+        visible = !visible;
+        classname = visible ? "bg-light px-4 rounded-1 d-block py-2" : "bg-light px-4 rounded-1 d-none";
+        StateHasChanged();
+
+
+    }
+    private string fullname;
+    private User user;
+    private bool isActive;
+    private PopUp popUpLogout;
+    protected override async Task OnInitializedAsync()
+    {
+        Employee employee = await sessionStorage.GetItemAsync<Employee>("employee");
+
+        fullname = employee.FirstName + " " + employee.LastName;
+        isActive = true;
+        StateHasChanged();
+    }
+    protected  async Task  Logout(bool val){
+        if (val == true)
+        {
+            await sessionStorage.RemoveItemAsync("employee");
+            //navigationmanager.LocationChanged += OnLocationChanged;
+            navigationmanager.NavigateTo("/", forceLoad:true,replace:true);
+
+            
+        }
+    }
+    private void OnLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+       
+        
+        navigationmanager.NavigateTo("/", forceLoad: true);
+        
+    }
+}
